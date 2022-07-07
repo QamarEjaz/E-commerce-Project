@@ -1,0 +1,18 @@
+const express=require('express')
+const { createUser, userlogin, logOut, forgetPassword, resetPassword, getUserDeatails, updatePassword, updateUserProfile, getAllUsers, deleteUser, updateUserRole } = require('../controllers/userController')
+const router=express.Router()
+const {isaUthenticatedUser,authorization}=require('../middleware/auth')
+router.route('/register').post(createUser)
+router.route('/login').post(userlogin)
+router.route('/logout').get(logOut)
+router.route('/password/forget').post(forgetPassword)
+router.route('/password/reset/:token').put(resetPassword)
+router.route('/me').get(isaUthenticatedUser,getUserDeatails)
+router.route('/password/update').put(isaUthenticatedUser,updatePassword)
+router.route('/me/update').put(isaUthenticatedUser,updateUserProfile)
+router.route("/admin/users").get(isaUthenticatedUser,authorization("admin"),getAllUsers)
+router.route("/admin/user/:id").get(isaUthenticatedUser,authorization("admin"),getUserDeatails)
+router.route("/admin/user/:id").put(isaUthenticatedUser,authorization("admin"),updateUserRole)
+router.route("/admin/user/:id").delete(isaUthenticatedUser,authorization("admin"),deleteUser)
+
+module.exports=router
